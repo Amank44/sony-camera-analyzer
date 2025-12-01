@@ -22,17 +22,22 @@ jobs:
         with:
           node-version: 20
           cache: 'npm'
+          cache-dependency-path: sony-camera-analyzer/package-lock.json
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          cd sony-camera-analyzer
+          npm ci
 
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
         with:
           # GitHub token, automatically provided to the action
-          # (No need to define this secret in the repo settings)
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
           # If the commit is tagged with a version (e.g. "v1.0.0"),
           # release the app after building
           release: true
+          
+          # IMPORTANT: Point to the subdirectory containing package.json
+          package_root: sony-camera-analyzer
