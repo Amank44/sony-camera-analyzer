@@ -1,0 +1,109 @@
+Run samuelmeuli/action-electron-builder@v1
+
+Will run NPM commands in directory "sony-camera-analyzer"
+
+Installing dependencies using NPM…
+
+up to date, audited 531 packages in 1s
+
+99 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+
+Running the build script…
+
+> sony-camera-analyzer@1.0.0 build
+> vite build
+
+vite v7.2.6 building client environment for production...
+transforming...
+✓ 32 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.47 kB │ gzip:  0.30 kB
+dist/assets/index-DmGwE4t0.css   19.59 kB │ gzip:  4.27 kB
+dist/assets/index-ITLUmuRG.js   202.67 kB │ gzip: 63.58 kB
+✓ built in 893ms
+
+Building and releasing the Electron app…
+  • electron-builder  version=26.0.12 os=24.6.0
+  • loaded configuration  file=package.json ("build" field)
+  • author is missed in the package.json  appPackageFile=/Users/runner/work/sony-camera-analyzer/sony-camera-analyzer/sony-camera-analyzer/package.json
+  • executing @electron/rebuild  electronVersion=39.2.4 arch=arm64 buildFromSource=false appDir=./
+  • installing native dependencies  arch=arm64
+  • completed installing native dependencies
+  • packaging       platform=darwin arch=arm64 electron=39.2.4 appOutDir=dist/mac-arm64
+  • downloading     url=https://github.com/electron/electron/releases/download/v39.2.4/electron-v39.2.4-darwin-arm64.zip size=113 MB parts=6
+  • downloaded      url=https://github.com/electron/electron/releases/download/v39.2.4/electron-v39.2.4-darwin-arm64.zip duration=865ms
+  • default Electron icon is used  reason=application icon is not set
+  • skipped macOS application code signing  reason=cannot find valid "Developer ID Application" identity or custom non-Apple code signing certificate, it could cause some undefined behaviour, e.g. macOS localized description not visible, see https://electron.build/code-signing allIdentities=     0 identities found
+                                                Valid identities only
+}
+    at createHttpError (/Users/runner/work/sony-camera-analyzer/sony-camera-analyzer/sony-camera-analyzer/node_modules/builder-util-runtime/src/httpExecutor.ts:31:10)
+    at IncomingMessage.<anonymous> (/Users/runner/work/sony-camera-analyzer/sony-camera-analyzer/sony-camera-analyzer/node_modules/builder-util-runtime/src/httpExecutor.ts:202:13)
+    at IncomingMessage.emit (node:events:536:35)
+    at endReadableNT (node:internal/streams/readable:1698:12)
+    at processTicksAndRejections (node:internal/process/task_queues:82:21)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        Error #2 --------------------------------------------------------------------------------
+HttpError: 403 Forbidden
+"method: post url: https://api.github.com/repos/Amank44/sony-camera-analyzer/releases\n\n          Data:\n          {\"message\":\"Resource not accessible by integration\",\"documentation_url\":\"https://docs.github.com/rest/releases/releases#create-a-release\",\"status\":\"403\"}\n          "
+Headers: {
+  "date": "Mon, 01 Dec 2025 15:19:59 GMT",
+  "content-type": "application/json; charset=utf-8",
+  "content-length": "153",
+  "x-github-media-type": "github.v3; format=json",
+  "x-accepted-github-permissions": "contents=write; contents=write,workflows=write",
+  "x-github-api-version-selected": "2022-11-28",
+  "x-ratelimit-limit": "5000",
+  "x-ratelimit-remaining": "4997",
+  "x-ratelimit-reset": "1764605440",
+  "x-ratelimit-used": "3",
+  "x-ratelimit-resource": "core",
+  "access-control-expose-headers": "ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset",
+  "access-control-allow-origin": "*",
+  "strict-transport-security": "max-age=31536000; includeSubdomains; preload",
+  "x-frame-options": "deny",
+  "x-content-type-options": "nosniff",
+  "x-xss-protection": "0",
+  "referrer-policy": "origin-when-cross-origin, strict-origin-when-cross-origin",
+  "content-security-policy": "default-src 'none'",
+  "vary": "Accept-Encoding, Accept, X-Requested-With",
+  "server": "github.com",
+  "x-github-request-id": "9D05:C9AD6:153DFA4:15C680F:692DB21F"
+}
+    at createHttpError (/Users/runner/work/sony-camera-analyzer/sony-camera-analyzer/sony-camera-analyzer/node_modules/builder-util-runtime/src/httpExecutor.ts:31:10)
+    at IncomingMessage.<anonymous> (/Users/runner/work/sony-camera-analyzer/sony-camera-analyzer/sony-camera-analyzer/node_modules/builder-util-runtime/src/httpExecutor.ts:202:13)
+    at IncomingMessage.emit (node:events:536:35)
+    at endReadableNT (node:internal/streams/readable:1698:12)
+    at processTicksAndRejections (node:internal/process/task_queues:82:21)
+    at throwError (/Users/runner/work/sony-camera-analyzer/sony-camera-analyzer/sony-camera-analyzer/node_modules/builder-util/src/asyncTaskManager.ts:88:11)
+    at checkErrors (/Users/runner/work/sony-camera-analyzer/sony-camera-analyzer/sony-camera-analyzer/node_modules/builder-util/src/asyncTaskManager.ts:53:9)
+    at AsyncTaskManager.awaitTasks (/Users/runner/work/sony-camera-analyzer/sony-camera-analyzer/sony-camera-analyzer/node_modules/builder-util/src/asyncTaskManager.ts:67:7)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at PublishManager.awaitTasks (/Users/runner/work/sony-camera-analyzer/sony-camera-analyzer/sony-camera-analyzer/node_modules/app-builder-lib/src/publish/PublishManager.ts:242:5)
+    at executeFinally (/Users/runner/work/sony-camera-analyzer/sony-camera-analyzer/sony-camera-analyzer/node_modules/builder-util/src/promise.ts:23:3)
+/Users/runner/work/_actions/samuelmeuli/action-electron-builder/v1/index.js:144
+				throw err;
+				^
+
+Error: Command failed: npx --no-install electron-builder --mac --publish always 
+    at genericNodeError (node:internal/errors:984:15)
+    at wrappedFn (node:internal/errors:538:14)
+    at checkExecSyncError (node:child_process:891:11)
+    at execSync (node:child_process:963:15)
+    at run (/Users/runner/work/_actions/samuelmeuli/action-electron-builder/v1/index.js:21:27)
+    at runAction (/Users/runner/work/_actions/samuelmeuli/action-electron-builder/v1/index.js:132:4)
+    at Object.<anonymous> (/Users/runner/work/_actions/samuelmeuli/action-electron-builder/v1/index.js:150:1)
+    at Module._compile (node:internal/modules/cjs/loader:1521:14)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1623:10)
+    at Module.load (node:internal/modules/cjs/loader:1266:32) {
+  status: 1,
+  signal: null,
+  output: [ null, null, null ],
+  pid: 1555,
+  stdout: null,
+  stderr: null
+}
+
+Node.js v20.19.5
