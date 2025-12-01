@@ -5,7 +5,7 @@
   "description": "Sony Camera Footage Analyzer",
   "repository": {
     "type": "git",
-    "url": "https://github.com/username/sony-camera-analyzer"
+    "url": "https://github.com/Amank44/sony-camera-analyzer"
   },
   "main": "main.cjs",
   "type": "module",
