@@ -1,5 +1,6 @@
 const xmlParser = require('./xmlParser.cjs');
 const { extractMetadata, closeExifTool } = require('./videoMetadata.cjs');
+const { generateThumbnail } = require('./thumbnail.cjs');
 const fs = require('fs').promises;
 const path = require('path');
 
@@ -160,8 +161,17 @@ async function analyzeFootage(folderPath, progressCallback) {
 
         for (let i = 0; i < videoFiles.length; i++) {
             console.log(`📊 Processing ${i + 1}/${videoFiles.length}: ${path.basename(videoFiles[i])}`);
-            const metadata = await extractMetadata(videoFiles[i]);
-            videoMetadata.push(metadata);
+
+            // Run metadata extraction and thumbnail generation in parallel
+            const [metadata, thumbnailPath] = await Promise.all([
+                extractMetadata(videoFiles[i]),
+                generateThumbnail(videoFiles[i])
+            ]);
+
+            if (metadata) {
+                metadata.thumbnail = thumbnailPath;
+                videoMetadata.push(metadata);
+            }
 
             const percentage = 20 + Math.round(((i + 1) / videoFiles.length) * 60); // 20% to 80%
             progressCallback({

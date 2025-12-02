@@ -1,6 +1,7 @@
-const { app, BrowserWindow, ipcMain, dialog } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, protocol, net } = require('electron');
 const path = require('path');
 const fs = require('fs').promises;
+const { startServer, getPort } = require('./lib/streamServer.cjs');
 
 let mainWindow;
 
@@ -30,7 +31,19 @@ function createWindow() {
     }
 }
 
-app.whenReady().then(createWindow);
+app.whenReady().then(async () => {
+    // Start streaming server
+    await startServer();
+
+    // Register 'media' protocol to serve local files (images, etc.)
+    protocol.handle('media', (request) => {
+        const filePath = request.url.slice('media://'.length);
+        const decodedPath = decodeURIComponent(filePath);
+        return net.fetch(`file:///${decodedPath}`);
+    });
+
+    createWindow();
+});
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
@@ -45,6 +58,14 @@ app.on('activate', () => {
 });
 
 // IPC Handlers
+ipcMain.handle('log-error', (event, error) => {
+    console.error("🔴 FRONTEND ERROR:", error);
+});
+
+ipcMain.handle('get-stream-port', () => {
+    return getPort();
+});
+
 ipcMain.handle('select-folder', async () => {
     const result = await dialog.showOpenDialog(mainWindow, {
         properties: ['openDirectory'],

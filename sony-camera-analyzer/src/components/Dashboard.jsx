@@ -7,6 +7,9 @@ export default function Dashboard() {
     const [progress, setProgress] = useState({ progress: 0, message: '', step: '' });
     const [results, setResults] = useState(null);
     const [error, setError] = useState(null);
+    const [isDragging, setIsDragging] = useState(false);
+
+    const [streamPort, setStreamPort] = useState(null);
 
     useEffect(() => {
         // Listen for progress updates
@@ -14,6 +17,13 @@ export default function Dashboard() {
             const cleanup = window.electronAPI.onProgress((data) => {
                 setProgress(data);
             });
+
+            // Get stream port
+            window.electronAPI.getStreamPort().then(port => {
+                console.log("Stream server port:", port);
+                setStreamPort(port);
+            });
+
             return cleanup;
         }
     }, []);
@@ -38,6 +48,54 @@ export default function Dashboard() {
         } catch (err) {
             setError(err.message);
             setAnalyzing(false);
+        }
+    };
+
+    const handleDragOver = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsDragging(true);
+    };
+
+    const handleDragLeave = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsDragging(false);
+    };
+
+    const handleDrop = async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsDragging(false);
+
+        const files = e.dataTransfer.files;
+        console.log("Dropped files:", files);
+
+        if (files && files.length > 0) {
+            // Use Electron utility to get path
+            const path = window.electronAPI.getFilePath(files[0]);
+            console.log("Detected path:", path);
+
+            if (path) {
+                // Trigger analysis
+                setAnalyzing(true);
+                setResults(null);
+                setError(null);
+                try {
+                    const response = await window.electronAPI.analyzeFootage(path);
+                    if (response.success) {
+                        setResults(response.data);
+                    } else {
+                        setError(response.error);
+                    }
+                } catch (err) {
+                    setError(err.message);
+                }
+                setAnalyzing(false);
+            } else {
+                console.error("No path detected on dropped item");
+                setError("Could not detect folder path. Please try using the button.");
+            }
         }
     };
 
@@ -138,13 +196,25 @@ export default function Dashboard() {
             </header>
 
             {!results && !analyzing && (
-                <div className="flex flex-col items-center justify-center h-64 border-2 border-dashed border-gray-700 rounded-xl bg-gray-800/30 hover:bg-gray-800/50 transition-colors cursor-pointer"
-                    onClick={handleSelectFolder}>
-                    <svg className="w-16 h-16 text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div
+                    className={`flex flex-col items-center justify-center h-64 border-2 border-dashed rounded-xl transition-all cursor-pointer ${isDragging
+                        ? 'border-blue-500 bg-blue-900/30 scale-[1.02]'
+                        : 'border-gray-700 bg-gray-800/30 hover:bg-gray-800/50'
+                        }`}
+                    onClick={handleSelectFolder}
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    onDrop={handleDrop}
+                >
+                    <svg className={`w-16 h-16 mb-4 transition-colors ${isDragging ? 'text-blue-400' : 'text-gray-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
                     </svg>
-                    <span className="text-xl font-medium text-gray-300">Select Footage Folder</span>
-                    <p className="text-sm text-gray-500 mt-2">Choose parent folder containing cards</p>
+                    <span className={`text-xl font-medium ${isDragging ? 'text-blue-300' : 'text-gray-300'}`}>
+                        {isDragging ? 'Drop Folder Here' : 'Select Footage Folder'}
+                    </span>
+                    <p className={`text-sm mt-2 ${isDragging ? 'text-blue-400' : 'text-gray-500'}`}>
+                        {isDragging ? 'Release to analyze' : 'Choose parent folder containing cards or drag & drop'}
+                    </p>
                 </div>
             )}
 
@@ -198,7 +268,7 @@ export default function Dashboard() {
                                 </div>
 
                                 {group.cameras.map(camera => (
-                                    <CameraCard key={camera.id} camera={camera} />
+                                    <CameraCard key={camera.id} camera={camera} streamPort={streamPort} />
                                 ))}
                             </div>
                         ))}

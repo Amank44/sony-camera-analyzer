@@ -15,6 +15,9 @@ async function extractMetadata(filePath) {
             size: stats.size,
             duration: metadata.Duration,
             format: metadata.FileType || require('path').extname(filePath).slice(1).toUpperCase(),
+            width: metadata.ImageWidth,
+            height: metadata.ImageHeight,
+            frameRate: metadata.VideoFrameRate || metadata.CaptureFrameRate,
             resolution: (metadata.ImageWidth && metadata.ImageHeight) ? `${metadata.ImageWidth}x${metadata.ImageHeight}` : null
         };
     } catch (error) {
