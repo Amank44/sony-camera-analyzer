@@ -1,8 +1,9 @@
 {
   "name": "sony-camera-analyzer",
   "private": true,
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Sony Camera Footage Analyzer",
+  "author": "Amank44",
   "repository": {
     "type": "git",
     "url": "https://github.com/Amank44/sony-camera-analyzer"
@@ -47,10 +48,8 @@
       "allowToChangeInstallationDirectory": true
     },
     "asarUnpack": [
-      "**/node_modules/exiftool-vendored/**/*",
-      "**/node_modules/exiftool-vendored.exe/**/*",
-      "**/node_modules/exiftool-vendored.pl/**/*",
-      "**/node_modules/ffmpeg-static/**/*"
+      "node_modules/exiftool-vendored*/**",
+      "node_modules/ffmpeg-static/**"
     ]
   },
   "dependencies": {
