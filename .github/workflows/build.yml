@@ -36,7 +36,7 @@ jobs:
 
   # Build for Mac Intel (x64)
   build-mac-x64:
-    runs-on: macos-13  # Intel Mac runner
+    runs-on: macos-15-intel  # Intel Mac runner
     permissions:
       contents: write
     steps:
