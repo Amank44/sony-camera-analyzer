@@ -1,7 +1,7 @@
 {
   "name": "sony-camera-analyzer",
   "private": true,
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Sony Camera Footage Analyzer",
   "author": "Amank44",
   "repository": {
@@ -28,15 +28,7 @@
       "lib/**/*"
     ],
     "mac": {
-      "target": [
-        {
-          "target": "dmg",
-          "arch": [
-            "x64",
-            "arm64"
-          ]
-        }
-      ],
+      "target": "dmg",
       "category": "public.app-category.video"
     },
     "win": {

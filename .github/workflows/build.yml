@@ -6,21 +6,16 @@ on:
       - 'v*'
 
 jobs:
-  release:
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      matrix:
-        os: [macos-latest, windows-latest]
-
+  # Build for Windows
+  build-windows:
+    runs-on: windows-latest
     permissions:
       contents: write
-
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v4
 
-      - name: Install Node.js, NPM and Yarn
+      - name: Install Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -35,12 +30,66 @@ jobs:
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
         with:
-          # GitHub token, automatically provided to the action
           github_token: ${{ secrets.GITHUB_TOKEN }}
-
-          # If the commit is tagged with a version (e.g. "v1.0.0"),
-          # release the app after building
           release: true
-          
-          # IMPORTANT: Point to the subdirectory containing package.json
           package_root: sony-camera-analyzer
+
+  # Build for Mac Intel (x64)
+  build-mac-x64:
+    runs-on: macos-13  # Intel Mac runner
+    permissions:
+      contents: write
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: sony-camera-analyzer/package-lock.json
+
+      - name: Install dependencies
+        run: |
+          cd sony-camera-analyzer
+          npm ci
+
+      - name: Build/release Electron app
+        uses: samuelmeuli/action-electron-builder@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          release: true
+          package_root: sony-camera-analyzer
+          build_script_name: build
+          args: --mac --x64
+
+  # Build for Mac Apple Silicon (arm64)
+  build-mac-arm64:
+    runs-on: macos-latest  # Apple Silicon Mac runner (M1/M2)
+    permissions:
+      contents: write
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: sony-camera-analyzer/package-lock.json
+
+      - name: Install dependencies
+        run: |
+          cd sony-camera-analyzer
+          npm ci
+
+      - name: Build/release Electron app
+        uses: samuelmeuli/action-electron-builder@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          release: true
+          package_root: sony-camera-analyzer
+          build_script_name: build
+          args: --mac --arm64

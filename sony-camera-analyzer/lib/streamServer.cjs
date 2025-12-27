@@ -1,34 +1,46 @@
 const http = require('http');
 const ffmpeg = require('fluent-ffmpeg');
-const ffmpegPath = require('ffmpeg-static');
 const path = require('path');
 const fs = require('fs');
 
-// Set ffmpeg path
-// In production (asar), we need to point to the unpacked binary
-// In development, we use the one in node_modules directly
-const isDev = process.env.NODE_ENV === 'development';
-const finalFfmpegPath = isDev
-    ? ffmpegPath
-    : ffmpegPath.replace('app.asar', 'app.asar.unpacked');
+// FFmpeg initialization with error handling
+let ffmpegAvailable = false;
 
-if (!fs.existsSync(finalFfmpegPath)) {
-    console.error(`❌ FFmpeg binary NOT found at: ${finalFfmpegPath}`);
-} else {
-    console.log(`✅ FFmpeg binary found at: ${finalFfmpegPath}`);
+try {
+    const ffmpegPath = require('ffmpeg-static');
+
+    // Set ffmpeg path
+    // In production (asar), we need to point to the unpacked binary
+    // In development, we use the one in node_modules directly
+    const isDev = process.env.NODE_ENV === 'development';
+    const finalFfmpegPath = isDev
+        ? ffmpegPath
+        : ffmpegPath.replace('app.asar', 'app.asar.unpacked');
+
+    if (fs.existsSync(finalFfmpegPath)) {
+        console.log(`✅ FFmpeg binary found at: ${finalFfmpegPath}`);
+        ffmpeg.setFfmpegPath(finalFfmpegPath);
+
+        // Verify FFmpeg execution asynchronously (non-blocking)
+        ffmpeg.getAvailableFormats((err, formats) => {
+            if (err) {
+                console.error('⚠️ FFmpeg execution failed:', err.message);
+                console.log('📝 Video streaming will not be available, but XML analysis will work.');
+                ffmpegAvailable = false;
+            } else {
+                console.log('✅ FFmpeg is executable. Available formats:', Object.keys(formats).length);
+                ffmpegAvailable = true;
+            }
+        });
+    } else {
+        console.error(`⚠️ FFmpeg binary NOT found at: ${finalFfmpegPath}`);
+        console.log('📝 Video streaming will not be available, but XML analysis will work.');
+    }
+} catch (err) {
+    console.error('⚠️ Failed to initialize FFmpeg:', err.message);
+    console.log('📝 Video streaming will not be available, but XML analysis will work.');
 }
 
-ffmpeg.setFfmpegPath(finalFfmpegPath);
-console.log(`🎥 Stream Server initialized. FFmpeg path: ${finalFfmpegPath}`);
-
-// Verify FFmpeg execution
-ffmpeg.getAvailableFormats((err, formats) => {
-    if (err) {
-        console.error('❌ FFmpeg execution failed:', err.message);
-    } else {
-        console.log('✅ FFmpeg is executable. Available formats:', Object.keys(formats).length);
-    }
-});
 
 let server;
 let serverPort = 0;
